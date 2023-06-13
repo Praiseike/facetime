@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div class="w-full sm:md:w-[70%] mx-auto h-screen px-4 sm:md:px-20 py-20 text-slate-300 border-slate-700 border-r border-l">
+    <div class="px-4 w-full sm:md:w-[70%] mx-auto h-screen px-4 sm:md:px-20 py-20 text-slate-300 border-slate-700 border-r border-l">
         <div class="flex justify-between">
             <h1 class="text-slate-300 text-2xl font-semibold">List of online users</h1>        
             <a href="{{ route('auth-logout') }}" class="px-3 py-1 text-white cursor-pointer rounded bg-slate-500">Logout</a>
