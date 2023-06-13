@@ -36,7 +36,7 @@ const createPeerConnection = () => {
         try{
             peerConnection.onicecandidate = e => {
                 if(e.candidate){
-                    wsend(currentTarget,'client-candidate',e.candidate)
+                    wsend(globalMsg.from,'client-candidate',e.candidate)
                     console.log('sent ice candidate')
                 }
             }            
