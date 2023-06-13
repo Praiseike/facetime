@@ -33,7 +33,7 @@
     </div>
     <div class="w-[90%] sm:md:w-[70%] mx-auto h-screen px-3 sm:md:px-20 py-20 text-slate-300 border-slate-700 sm:md:border-r sm:md:border-l">
         <div class="flex justify-between">
-            <h1 class="text-slate-300 text-2xl font-semibold">List of online users</h1>        
+            <h1 class="text-slate-300 text-2xl font-semibold">Users</h1>        
             <a href="{{ route('auth-logout') }}" class="px-3 py-1 text-white cursor-pointer rounded bg-slate-500">Logout</a>
         </div>
         <ul class="mt-5 space-y-4">
