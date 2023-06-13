@@ -6,7 +6,7 @@
     <script>
         let serverHost = location.hostname;
         let serverPort = 8090;
-        let connection = new WebSocket(`wss://${serverHost}:8090/signaling?id={{ $user->id }}`);
+        let connection = new WebSocket(`wss://${serverHost}/signaling?id={{ $user->id }}`);
     </script>
     @vite('resources/css/app.css')
     <title>Video chat</title>
