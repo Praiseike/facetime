@@ -36,22 +36,31 @@ class WebSocketController extends Controller implements MessageComponentInterfac
             echo "Invalid connection attempt with ID ".$requestParam['id']."\n";
         }
     }
+
     // called when connection is closed
     public function onClose(ConnectionInterface $conn){
+        // detaching $conn from the list reduces the 
+        // refcount to zero thus freeing the allocated memory
+        // HOPEFULLY
         $this->connections->detach($conn);
-
         echo "Connection ({$conn->user->name}) has disconnected\n";
-
+        // $conn falls out of scope here but to be sure
+        unset($conn->user);
     }
 
     // called when a client sends data through the socket
     public function onMessage(ConnectionInterface $from, $msg){
+
+        // get the number of connections
         $numRecv = count($this->connections);
         
         $data = json_decode($msg,true);
         $type = $data['type'];
-
+        // get the target user
         $targetUser = User::find($data['target']);
+
+        // basically relaying the msg from the sender to
+        // the receiver but after editing some fields
 
         if($targetUser){
 
@@ -63,8 +72,11 @@ class WebSocketController extends Controller implements MessageComponentInterfac
 
             $msg = json_encode($relay);
             
+            // loop through all the connections
             foreach($this->connections as $client){
+                // make sure the message is not directed at the sender
                 if($from !== $client){
+                    // find the target and send the message
                     if($targetUser->id == $client->user->id){
                         $client->send($msg);
                         echo $from->user->name." Sent message of ".$type." to " .$targetUser->name."\n";
@@ -74,11 +86,9 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         }
     }
 
-
     // called when there's an error
     public function onError(ConnectionInterface $conn,\Exception $e){
         echo "An error has occured: {$e->getMessage()}";
-
     }
 }
 

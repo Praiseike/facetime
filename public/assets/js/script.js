@@ -1,7 +1,6 @@
 'use strict'
 
 let localStream = null;
-let remoteStream = null;
 let peerConnection;
 let localVideo = document.querySelector('#localVideo');
 let remoteVideo = document.querySelector('#remoteVideo');
@@ -24,9 +23,6 @@ const constraints = {
     video: true,
     audio: true,
 }
-
-
-// let peerConnection = new RTCPeerConnection(servers);
 
 const createPeerConnection = () => {
     try{
@@ -156,7 +152,7 @@ connection.onmessage = async (event) => {
 
         case 'client-denied-call':
             alert("the call was denied");
-            toggleScreen();
+            toggleCallScreen();
             break;
 
         case 'client-ready':
@@ -173,30 +169,33 @@ const initCam = async () => {
     // get user cam 
     localStream = await navigator.mediaDevices.getUserMedia(constraints)
     localVideo.srcObject = localStream;
-    // create new MediaSteam object for the remote stream;
-    remoteStream = new MediaStream();        
 }
 
-const toggleScreen = () => {
+const toggleCallScreen = () => {
+    // toggle the call screen containing the video elements
     document.querySelector('#call-screen').classList.toggle('hidden');
 }
 
 const toggleRequestScreen = () => {
+    // toggle the call screen containing the call request elements
     document.querySelector('#call-request').classList.toggle('hidden');
 }
 
 const call = async (e) => {
+    // initiate a call by first getting the target id 
+    // and initialing user devices
     const target = e.target.getAttribute('data-id');
     currentTarget = target;
-    toggleScreen();
+    toggleCallScreen();
     initCam().then(() => {
+        // ask if the target client is ready to receive a call
         wsend(target,'is-client-ready',{})
     })
 }
 
 const answerCall = async (e) => {
     toggleRequestScreen();
-    toggleScreen();
+    toggleCallScreen();
     await initCam();
     console.log('client is ready');
     wsend(globalMsg.from,'client-ready',null);
@@ -215,17 +214,13 @@ const endcall = () => {
         // leave the rest to gc
         localStream = null;
         localVideo.srcObject = null;
+        toggleCallScreen();
     }
 }
 
-
-// window.addEventListener('beforeunload', (event) => {
-//     event.preventDefault();
-//     return
-// });
-
-// document.querySelector('#init').addEventListener('click',init);
-document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
-document.querySelector('#endcall').addEventListener('click',endcall);
-document.querySelector('#deny').addEventListener('click',denyCall);
-document.querySelector('#answer').addEventListener('click',answerCall);
+window.onload = () => {
+    document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
+    document.querySelector('#endcall').addEventListener('click',endcall);
+    document.querySelector('#deny').addEventListener('click',denyCall);
+    document.querySelector('#answer').addEventListener('click',answerCall);
+}
