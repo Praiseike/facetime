@@ -45,7 +45,7 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         $this->connections->detach($conn);
         echo "Connection ({$conn->user->name}) has disconnected\n";
         // $conn falls out of scope here but to be sure
-        unset($conn->user);
+        // unset($conn->user);
     }
 
     // called when a client sends data through the socket
@@ -91,4 +91,3 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         echo "An error has occured: {$e->getMessage()}";
     }
 }
-
