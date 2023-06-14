@@ -10,14 +10,16 @@ let globalMsg = {};
 let currentTarget = 0;
 
 const servers = {
-    iceServers: [
-    {
-        urls: ['stun:sandbox1.techr.com:3478','turn:sandbox1.techr.com:3478'],
-        username: 'techroom',
-        credential: 'techroompassword'
-    }],
+    // iceServers: [
+    // {
+    //     urls: ['stun:sandbox1.techr.com:3478','turn:sandbox1.techr.com:3478'],
+    //     username: 'techroom',
+    //     credential: 'techroompassword'
+    // }],
     // iceCandidatePoolSize: 10,
 }
+
+
 
 const constraints = {
     video: true,
@@ -218,7 +220,12 @@ const endcall = () => {
     }
 }
 
-document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
-document.querySelector('#endcall').addEventListener('click',endcall);
-document.querySelector('#deny').addEventListener('click',denyCall);
-document.querySelector('#answer').addEventListener('click',answerCall);
+
+window.onload = () => {
+    const response = await fetch("https://techroom.metered.live/api/v1/turn/credentials?apiKey=a93cb76cf4e2f9f35286db43ba5095438cf1");
+    servers.iceServers = await response.json();
+    document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
+    document.querySelector('#endcall').addEventListener('click',endcall);
+    document.querySelector('#deny').addEventListener('click',denyCall);
+    document.querySelector('#answer').addEventListener('click',answerCall);
+}
