@@ -1,12 +1,6 @@
 @extends('auth.layout')
 @section('title','Register')
 @section('content')
-    <?php 
-        if($errors->any())  {
-            print_r($errors->all());
-            die();
-        }
-    ?>
     <form method="post" action="{{ route('auth-post-register') }}" class="flex flex-col space-y-4 text-center">
         @csrf
         <h1 class="text-3xl">Register</h1>

@@ -23,9 +23,9 @@
         </div>
     </div>
     <div id="call-screen" class="fixed hidden h-screen w-full backdrop-blur inset-0" id="overlay">
-        <div class="h-full w-full sm:md:w-[40%] mx-auto px-0 sm:md:px-10">
+        <div class="h-full w-full sm:md:w-min-[40%] mx-auto px-0 sm:md:px-10">
             <video class="bg-black border w-[10rem] z-[20] absolute h-[10rem] border-orange-500" autoplay id="localVideo"></video>
-            <video class="bg-black h-full  w-full" autoplay id="remoteVideo"></video>
+            <video class="bg-black h-screen  w-full" autoplay id="remoteVideo"></video>
             <div class="z-[40] mt-[-5rem] w-fit mx-auto">
                 <button type="" id="endcall" class="w-14 rounded-full h-14 hover:bg-red-500 mt-auto bg-red-700 text-white">end</button>
             </div>

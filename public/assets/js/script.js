@@ -218,9 +218,7 @@ const endcall = () => {
     }
 }
 
-window.onload = () => {
-    document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
-    document.querySelector('#endcall').addEventListener('click',endcall);
-    document.querySelector('#deny').addEventListener('click',denyCall);
-    document.querySelector('#answer').addEventListener('click',answerCall);
-}
+document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
+document.querySelector('#endcall').addEventListener('click',endcall);
+document.querySelector('#deny').addEventListener('click',denyCall);
+document.querySelector('#answer').addEventListener('click',answerCall);
