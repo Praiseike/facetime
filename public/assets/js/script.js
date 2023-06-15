@@ -167,26 +167,25 @@ connection.onmessage = async (event) => {
     }
 }
 
-const initCam = async () => {
-    // get user cam 
-    localStream = await navigator.mediaDevices.getUserMedia(constraints)
-    localVideo.srcObject = localStream;
-}
-
 // const initCam = async () => {
-//     return new Promise((resolve,reject) => {
-//         navigator.mediaDevices.getUserMedia(constraints)
-//             .then(stream => {
-//                 localStream = stream;
-//                 localVideo.srcObject = localStream;
-//                 resolve()
-//             })
-//             .catch(error => {
-//                 console.log(error)
-//                 reject()
-//             })
-//     });
+//     // get user cam 
+//     localStream = await navigator.mediaDevices.getUserMedia(constraints)
+//     localVideo.srcObject = localStream;
 // }
+
+const initCam = async () => {
+    return new Promise((resolve,reject) => {
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(stream => {
+                localStream = stream;
+                localVideo.srcObject = localStream;
+                resolve()
+            })
+            .catch(error => {
+                initCam()
+            })
+    });
+}
 
 const toggleCallScreen = () => {
     // toggle the call screen containing the video elements
@@ -242,7 +241,6 @@ const endcall = () => {
 
 
 window.onload = () => {
-    initCam()
     document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
     document.querySelector('#endcall').addEventListener('click',endcall);
     document.querySelector('#deny').addEventListener('click',denyCall);
