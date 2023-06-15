@@ -167,10 +167,25 @@ connection.onmessage = async (event) => {
     }
 }
 
+// const initCam = async () => {
+//     // get user cam 
+//     localStream = await navigator.mediaDevices.getUserMedia(constraints)
+//     localVideo.srcObject = localStream;
+// }
+
 const initCam = async () => {
-    // get user cam 
-    localStream = await navigator.mediaDevices.getUserMedia(constraints)
-    localVideo.srcObject = localStream;
+    return Promise((resolve,reject) => {
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(stream => {
+                localStream = stream;
+                localVideo.srcObject = localStream;
+                resolve()
+            })
+            .catch(error => {
+                console.log(error)
+                reject()
+            })
+    });
 }
 
 const toggleCallScreen = () => {
