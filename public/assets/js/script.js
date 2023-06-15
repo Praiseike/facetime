@@ -174,7 +174,7 @@ connection.onmessage = async (event) => {
 // }
 
 const initCam = async () => {
-    return Promise((resolve,reject) => {
+    return new Promise((resolve,reject) => {
         navigator.mediaDevices.getUserMedia(constraints)
             .then(stream => {
                 localStream = stream;
