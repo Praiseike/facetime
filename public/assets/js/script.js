@@ -205,6 +205,8 @@ const call = async (e) => {
     servers.iceServers = servers.iceServers.slice(0,5)
     navigator.mediaDevices.getUserMedia(constraints)
         .then(stream => {
+            localStream = stream
+            localVideo.srcObject = stream
             // initiate a call by first getting the target id 
             // and initialing user devices
             const target = e.target.getAttribute('data-id');
