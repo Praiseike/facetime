@@ -10,13 +10,13 @@ let globalMsg = {};
 let currentTarget = 0;
 
 const servers = {
-    // iceServers: [
-    // {
-    //     urls: ['stun:sandbox1.techr.com:3478','turn:sandbox1.techr.com:3478'],
-    //     username: 'techroom',
-    //     credential: 'techroompassword'
-    // }],
-    // iceCandidatePoolSize: 10,
+    iceServers: [
+    {
+        urls: ['stun:sandbox1.techr.com:3478','turn:sandbox1.techr.com:3478'],
+        username: 'techroom',
+        credential: 'techroompassword'
+    }],
+    iceCandidatePoolSize: 10,
 }
 
 
@@ -199,11 +199,6 @@ const toggleRequestScreen = () => {
 }
 
 const call = async (e) => {
-    // get and set ice server config from metered
-    const response = await fetch("https://techroom.metered.live/api/v1/turn/credentials?apiKey=a93cb76cf4e2f9f35286db43ba5095438cf1");
-    servers.iceServers = await response.json();
-    servers.iceServers = servers.iceServers.slice(0,5)
-
     // initiate a call by first getting the target id 
     // and initialing user devices
     const target = e.target.getAttribute('data-id');
@@ -213,6 +208,7 @@ const call = async (e) => {
         // ask if the target client is ready to receive a call
         wsend(target,'is-client-ready',{})
     })
+
 }
 
 const answerCall = async (e) => {
