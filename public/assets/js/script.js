@@ -187,7 +187,7 @@ const call = async (e) => {
     // get and set ice server config from metered
     const response = await fetch("https://techroom.metered.live/api/v1/turn/credentials?apiKey=a93cb76cf4e2f9f35286db43ba5095438cf1");
     servers.iceServers = await response.json();
-    servers.iceServers = servers.iceServers.slice(0,2);
+    servers.iceServers = servers.iceServers.slice(0,4)
 
     // initiate a call by first getting the target id 
     // and initialing user devices
