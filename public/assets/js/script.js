@@ -173,19 +173,19 @@ connection.onmessage = async (event) => {
 //     localVideo.srcObject = localStream;
 // }
 
-const initCam = async () => {
-    return new Promise((resolve,reject) => {
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then(stream => {
-                localStream = stream;
-                localVideo.srcObject = localStream;
-                resolve()
-            })
-            .catch(error => {
-                initCam()
-            })
-    });
-}
+// const initCam = async () => {
+//     return new Promise((resolve,reject) => {
+//         navigator.mediaDevices.getUserMedia(constraints)
+//             .then(stream => {
+//                 localStream = stream;
+//                 localVideo.srcObject = localStream;
+//                 resolve()
+//             })
+//             .catch(error => {
+//                 initCam()
+//             })
+//     });
+// }
 
 const toggleCallScreen = () => {
     // toggle the call screen containing the video elements
@@ -199,19 +199,23 @@ const toggleRequestScreen = () => {
 
 const call = async (e) => {
     // get and set ice server config from metered
-    const response = await fetch("https://techroom.metered.live/api/v1/turn/credentials?apiKey=a93cb76cf4e2f9f35286db43ba5095438cf1");
-    servers.iceServers = await response.json();
-    servers.iceServers = servers.iceServers.slice(0,5)
 
-    // initiate a call by first getting the target id 
-    // and initialing user devices
-    const target = e.target.getAttribute('data-id');
-    currentTarget = target;
-    toggleCallScreen();
-    initCam().then(() => {
-        // ask if the target client is ready to receive a call
-        wsend(target,'is-client-ready',{})
-    })
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(stream => {
+            const response = await fetch("https://techroom.metered.live/api/v1/turn/credentials?apiKey=a93cb76cf4e2f9f35286db43ba5095438cf1");
+            servers.iceServers = await response.json();
+            servers.iceServers = servers.iceServers.slice(0,5)
+
+            // initiate a call by first getting the target id 
+            // and initialing user devices
+            const target = e.target.getAttribute('data-id');
+            currentTarget = target;
+            toggleCallScreen();            
+            wsend(target,'is-client-ready',{})
+        });
+    // initCam().then(() => {
+    //     // ask if the target client is ready to receive a call
+    // })
 }
 
 const answerCall = async (e) => {
