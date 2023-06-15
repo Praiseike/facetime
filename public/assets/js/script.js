@@ -23,7 +23,7 @@ const servers = {
 
 const constraints = {
     video: true,
-    audio: true,
+    audio: false,
 }
 
 const createPeerConnection = () => {
