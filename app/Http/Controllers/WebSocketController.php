@@ -16,6 +16,27 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         $this->connections = new \SplObjectStorage;
     }
 
+
+    public function sendBroadcast(ConnectionInterface $conn,$msg){
+        foreach($connections as $client){
+            if($conn->resourceId != $client->resourceId){
+                $client->send($msg);
+            }
+        }
+    }
+
+
+    public function getConnectedUsers(){
+        $users = [];
+        foreach($connections as $con){
+            if(isset($con->user)){
+                $users[] = $con->user;
+            }
+        }
+        return json_encode($users);
+    }
+
+
     // called when connection is opened
     public function onOpen(ConnectionInterface $conn){
 
@@ -56,6 +77,13 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         
         $data = json_decode($msg,true);
         $type = $data['type'];
+
+        // check if its a broadcast and send accordingly
+        if($type == "broadcast"){
+            $this->sendBroadcast($msg);
+            return;
+        }
+
         // get the target user
         $targetUser = User::find($data['target']);
 

@@ -161,7 +161,11 @@ connection.onmessage = async (event) => {
             console.log(msg.type);
             await makeRequest();
             break;
-            
+        
+        case 'broadcast':
+            alert("a new user has joined");
+            break;
+
         default:
             break;
     }
@@ -238,6 +242,10 @@ const endcall = () => {
 
 
 window.onload = () => {
+    // announce your presence
+    wsend(null,'broadcast',)
+
+
     document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
     document.querySelector('#endcall').addEventListener('click',endcall);
     document.querySelector('#deny').addEventListener('click',denyCall);
