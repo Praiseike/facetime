@@ -21,10 +21,10 @@ Route::get('/register',[UserAuthController::class,'register'])->name('auth-regis
 Route::post('/login',[UserAuthController::class,'loginUser'])->name('auth-post-login');
 Route::post('/register',[UserAuthController::class,'registerUser'])->name('auth-post-register');
 
+Route::get('/test',[ RoomController::class, 'test' ])->name('test');
 
 Route::middleware('auth')->group(function (){
     Route::get('/',[ RoomController::class, 'room' ])->name('room');
-    Route::get('/test',[ RoomController::class, 'test' ])->name('test');
     Route::get('/logout',[UserAuthController::class,'logoutUser'])->name('auth-logout');
 
 });
