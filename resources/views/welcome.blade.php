@@ -5,9 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        let serverHost = location.hostname;
-        let serverPort = 8090;
-        let connection = new WebSocket(`wss://${serverHost}/signaling?id={{ $user->id }}`);
+        let connection = new WebSocket(`wss://${location.hostname}/signaling?id={{ $user->id }}`);
     </script>
     @vite('resources/css/app.css')
     <title>Video chat</title>
@@ -36,15 +34,14 @@
             <h1 class="text-slate-300 text-2xl font-semibold">Users</h1>        
             <a href="{{ route('auth-logout') }}" class="px-3 py-1 text-white cursor-pointer rounded bg-slate-500">Logout</a>
         </div>
-        <ul class="mt-5 space-y-4">
-            @foreach($users as $target)
-            <li class="rounded py-4 flex justify-between px-3 border border-slate-600">
-                <div class="inline-block">
-                    {{ $target->name }}
+        <ul class="mt-5 flex flex-row flex-wrap gap" id="user-list" >
+            <li class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
+                <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
+                    {{ $user->name[0] }}
                 </div>
-                <button id="call" data-id="{{ $target->id }}" class="px-3 text-white cursor-pointer rounded bg-slate-500">call</button>
+                <span class="font-bold text-xl">You</span>
             </li>
-            @endforeach
+
         </ul>
     </div>
     <script src="assets/js/script.js"></script>

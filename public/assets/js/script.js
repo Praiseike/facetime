@@ -23,7 +23,7 @@ const servers = {
 
 const constraints = {
     video: true,
-    audio: false,
+    audio: true,
 }
 
 const createPeerConnection = () => {
@@ -74,10 +74,22 @@ const wsend = (target,type,data = null) => {
 
     const message = JSON.stringify(messageObject);
     
+    let tries = 5;
     try{
-        connection.send(message);
+        let retryInterval = setInterval(() => {
+            if(connection.readyState == connection.OPEN){
+                connection.send(message);
+                clearInterval(retryInterval);
+            }
+            if(tries == 0)
+            {
+                clearInterval(retryInterval);
+                throw "failed to send message";
+            }
+            tries --;
+        },1000);
     }catch(error){
-        alert("an error occured while trying to send messages");
+        alert("WSEND ERROR:"+error,);
     }
 
 }
@@ -121,8 +133,10 @@ const handleCandidate = (candidate) => {
     if(peerConnection.localDescription){
         peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     }
-
 }
+
+
+
 
 connection.onmessage = async (event) => {
     const msg = JSON.parse(event.data);
@@ -152,6 +166,11 @@ connection.onmessage = async (event) => {
             toggleRequestScreen();
             break;
 
+        case 'end-call':
+            alert("the client ended the call")
+            endcall();
+            break;
+
         case 'client-denied-call':
             alert("the call was denied");
             toggleCallScreen();
@@ -163,9 +182,12 @@ connection.onmessage = async (event) => {
             break;
         
         case 'broadcast':
-            alert("a new user has joined");
+            updateUsers(msg);
             break;
 
+        case 'users-data':
+            updateUsers(msg);
+            break;
         default:
             break;
     }
@@ -206,10 +228,12 @@ const call = async (e) => {
     // initiate a call by first getting the target id 
     // and initialing user devices
     const target = e.target.getAttribute('data-id');
+    console.log(e.target);
     currentTarget = target;
     toggleCallScreen();
     initCam().then(() => {
         // ask if the target client is ready to receive a call
+        console.log("sending message to target",target)
         wsend(target,'is-client-ready',{})
     })
 
@@ -230,23 +254,49 @@ const denyCall = (target) => {
 
 const endcall = () => {
     console.log("ending call");
-    if(localStream){
-        // stop all tracks
+    if(localStream || peerConnection){
+        wsend(globalMsg.from,'end-call',null);
         localStream.getTracks().forEach(track => track.stop());
-        // leave the rest to gc
         localStream = null;
         localVideo.srcObject = null;
+        remoteVideo.srcObject = null;
+        peerConnection.close()
+        peerConnection = null
         toggleCallScreen();
     }
 }
 
+const updateUsers = (msg) => {
+    const userList = document.querySelector('#user-list');
+    const addUser = user => {
+        if(user.id != msg.target){
+            userList.innerHTML += `
+                <li id="call" data-id="${user.id}" " class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
+                    <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
+                        ${ user.name[0] }
+                    </div>
+                    <span class="font-bold text-xl">${user.name}</span>
+                </li>
+            `
+        }
+    }
+    if(msg.data.user){
+        addUser(msg.data.user);
+    }
+    msg.data.users.forEach(user => {
+        addUser(user);
+    });
+    // update onclick handlers for all #call buttons
+    document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
+
+}
 
 window.onload = () => {
     // announce your presence
-    wsend(null,'broadcast',)
+    wsend(null,'broadcast',{});
+    // get the list of currently connected users
+    wsend(null,'get-users',{});
 
-
-    document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
     document.querySelector('#endcall').addEventListener('click',endcall);
     document.querySelector('#deny').addEventListener('click',denyCall);
     document.querySelector('#answer').addEventListener('click',answerCall);

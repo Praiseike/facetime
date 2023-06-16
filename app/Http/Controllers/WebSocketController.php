@@ -16,27 +16,6 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         $this->connections = new \SplObjectStorage;
     }
 
-
-    public function sendBroadcast(ConnectionInterface $conn,$msg){
-        foreach($connections as $client){
-            if($conn->resourceId != $client->resourceId){
-                $client->send($msg);
-            }
-        }
-    }
-
-
-    public function getConnectedUsers(){
-        $users = [];
-        foreach($connections as $con){
-            if(isset($con->user)){
-                $users[] = $con->user;
-            }
-        }
-        return json_encode($users);
-    }
-
-
     // called when connection is opened
     public function onOpen(ConnectionInterface $conn){
 
@@ -78,44 +57,84 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         $data = json_decode($msg,true);
         $type = $data['type'];
 
-        // check if its a broadcast and send accordingly
-        if($type == "broadcast"){
-            $this->sendBroadcast($msg);
-            return;
-        }
 
-        // get the target user
-        $targetUser = User::find($data['target']);
+        switch($type){
 
-        // basically relaying the msg from the sender to
-        // the receiver but after editing some fields
-
-        if($targetUser){
-
-            $relay['from']  = $from->user->id;
-            $relay['to'] = $data['target'];
-            $relay['type'] = $type;
-            $relay['data'] = $data['data'];
-
-
-            $msg = json_encode($relay);
+            // check if its a broadcast and send accordingly
+            case 'broadcast':
+            $this->sendBroadcast($from,$data);
+                return;
+        
+            case 'get-users':
+                $this->getConnectedUsers($from);
+                return;
             
-            // loop through all the connections
-            foreach($this->connections as $client){
-                // make sure the message is not directed at the sender
-                if($from !== $client){
-                    // find the target and send the message
-                    if($targetUser->id == $client->user->id){
-                        $client->send($msg);
-                        echo $from->user->name." Sent message of ".$type." to " .$targetUser->name."\n";
+            default:
+                $this->handleRelay($from,$data,$msg,$type);
+                break;
+            }
+        }
+        
+        public function handleRelay($from,$data,$msg,$type){
+            // get the target user
+            $targetUser = User::find($data['target']);
+
+            // basically relaying the msg from the sender to
+            // the receiver but after editing some fields
+
+            if($targetUser){
+
+                $relay['from']  = $from->user->id;
+                $relay['to']    = $data['target'];
+                $relay['type']  = $type;
+                $relay['data']  = $data['data'];
+
+
+                $msg = json_encode($relay);
+                
+                // loop through all the connections
+                foreach($this->connections as $client){
+                    // make sure the message is not directed at the sender
+                    if($from !== $client){
+                        // find the target and send the message
+                        if($targetUser->id == $client->user->id){
+                            $client->send($msg);
+                            echo $from->user->name." Sent message of type '".$type."' to " .$targetUser->name."\n";
+                        }
                     }
-                }
-            }            
+                }            
+            }
+
+    }
+
+    public function sendBroadcast(ConnectionInterface $conn,$msg){
+        $msg['data'] = ['user'=>$conn->user];
+        foreach($this->connections as $client){
+            if($conn->resourceId != $client->resourceId){
+                $client->send(json_encode($msg));
+            }
         }
     }
 
+    public function getConnectedUsers($conn){
+        $users = [];
+        foreach($this->connections as $con){
+            if(isset($con->user)){
+                $users[] = [ 'id'=>$con->user->id,'name'=>$con->user->name ];
+            }
+        }
+        $msg = [
+            'target'=>$conn->user->id,
+            'type'=>'users-data',
+            'data'=> ['users'=>$users]
+        ];
+        $conn->send(json_encode($msg));
+    }
+
+
+
     // called when there's an error
     public function onError(ConnectionInterface $conn,\Exception $e){
-        echo "An error has occured: {$e->getMessage()}";
+        echo "An error has occured: {$e->getLine()}:{$e->getMessage()}";
     }
 }
