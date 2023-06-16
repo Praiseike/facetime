@@ -282,10 +282,11 @@ const updateUsers = (msg) => {
     }
     if(msg.data.user){
         addUser(msg.data.user);
+    }else{
+        msg.data.users.forEach(user => {
+            addUser(user);
+        });        
     }
-    msg.data.users.forEach(user => {
-        addUser(user);
-    });
     // update onclick handlers for all #call buttons
     document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
 

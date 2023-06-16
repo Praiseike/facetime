@@ -12,7 +12,7 @@
             </span>
         @endif
         <input type="password" name="password" class="px-3 py-2 w-[20rem] rounded border border-slate-500 bg-transparent" placeholder="password">            
-        <input type="password" name="password_confirmation" class="px-3 py-2 w-[20rem] rounded border border-slate-500 bg-transparent" placeholder="password">            
+        <input type="password" name="password_confirmation" class="px-3 py-2 w-[20rem] rounded border border-slate-500 bg-transparent" placeholder="confirm password">            
         @if ($errors->has('password'))
             <span class="text-xs text-red-300">
                 <?= $errors->first('password') ?>
