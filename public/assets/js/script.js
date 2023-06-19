@@ -12,7 +12,7 @@ let currentTarget = 0;
 const servers = {
     iceServers: [
     {
-        urls: ['stun:sandbox1.techr.com:3478','turn:sandbox1.techr.com:3478'],
+        urls: ['stun:stun1.l.google.com:19302','turn:sandbox1.techr.com:3478'],
         username: 'techroom',
         credential: 'techroompassword'
     }],
