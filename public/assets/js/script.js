@@ -11,13 +11,16 @@ let currentTarget = 0;
 
 const servers = {
     iceServers: [
-    {
-        urls: ['stun:stun.l.google.com']
-        // urls: ['stun:stun1.l.google.com:19302','turn:sandbox1.techr.com:3478'],
-        // username: 'techroom',
-        // credential: 'techroompassword'
-    }],
-    // iceCandidatePoolSize: 10,
+        
+        {
+            urls: 'stun:stun.l.google.com'
+        },
+        {
+            urls: 'turn:sandbox1.techr.com:3478',
+            username: 'techroom',
+            credential: 'techroompassword'
+        }
+    ],
 }
 
 
