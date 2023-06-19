@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
         let connection = new WebSocket(`wss://${location.hostname}/signaling?id={{ $user->id }}`);
+        let currentUserID = {{ $user->id }}
     </script>
     @vite('resources/css/app.css')
     <title>Video chat</title>
@@ -34,15 +35,14 @@
             <h1 class="text-slate-300 text-2xl font-semibold">Users</h1>        
             <a href="{{ route('auth-logout') }}" class="px-3 py-1 text-white cursor-pointer rounded bg-slate-500">Logout</a>
         </div>
-        <ul class="mt-5 flex flex-row flex-wrap gap" id="user-list" >
-            <li class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
+        <div class="mt-5 flex flex-row flex-wrap gap" id="user-list" >
+            <div class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
                 <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
                     {{ $user->name[0] }}
                 </div>
                 <span class="font-bold text-xl">You</span>
-            </li>
-
-        </ul>
+            </div>
+        </div>
     </div>
     <script src="assets/js/script.js"></script>
 </body>

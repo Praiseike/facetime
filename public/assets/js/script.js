@@ -182,10 +182,13 @@ connection.onmessage = async (event) => {
             break;
         
         case 'broadcast':
-            updateUsers(msg);
+            console.log("received broadcast... getting users");
+            wsend(null,'get-users',{});
+            // updateUsers(msg);
             break;
 
         case 'users-data':
+            console.log("listing users after broadcast",msg.data.users);
             updateUsers(msg);
             break;
         default:
@@ -268,28 +271,22 @@ const endcall = () => {
 
 const updateUsers = (msg) => {
     const userList = document.querySelector('#user-list');
+    userList.innerHTML = '';
     const addUser = user => {
-        if(user.id != msg.target){
-            userList.innerHTML = '';
-            userList.innerHTML += `
-                <li id="call" data-id="${user.id}" " class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
-                    <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
-                        ${ user.name[0] }
-                    </div>
-                    <span class="font-bold text-xl">${user.name}</span>
-                </li>
+        userList.innerHTML += `
+            <li id="call" data-id="${user.id}" " class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
+                <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
+                    ${ user.name[0] }
+                </div>
+                <span class="font-bold text-xl">${(user.id == currentUserID) ? 'You':user.name}</span>
+            </li>
             `
-        }
     }
-    if(msg.data.user){
-        addUser(msg.data.user);
-    }else{
-        msg.data.users.forEach(user => {
-            addUser(user);
-        });        
-    }
+    msg.data.users.forEach(user => {
+        addUser(user);
+    });        
     // update onclick handlers for all #call buttons
-    document.querySelectorAll('#call').forEach((btn) => (msg.target != btn.getAttribute('data-id')) && btn.addEventListener('click',call));
+    document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
 
 }
 

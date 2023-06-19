@@ -111,6 +111,7 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         $msg['data'] = ['user'=>$conn->user];
         foreach($this->connections as $client){
             if($conn->resourceId != $client->resourceId){
+                echo "sending broadcast to ".$client->user->name."\n";
                 $client->send(json_encode($msg));
             }
         }
@@ -124,7 +125,7 @@ class WebSocketController extends Controller implements MessageComponentInterfac
             }
         }
         $msg = [
-            'target'=>$conn->user->id,
+            'from'=>$conn->user->id,
             'type'=>'users-data',
             'data'=> ['users'=>$users]
         ];
