@@ -13,7 +13,7 @@ const servers = {
     iceServers: [
         
         {
-            urls: 'stun:stun.l.google.com'
+            urls: 'stun:stun.l.google.com:19302'
         },
         {
             urls: 'turn:sandbox1.techr.com:3478',
@@ -32,19 +32,17 @@ const constraints = {
 
 const createPeerConnection = () => {
     try{
-
         peerConnection = new RTCPeerConnection(servers);
-
-        try{
-            peerConnection.onicecandidate = e => {
+        peerConnection.onicecandidate = e => {
+            try{
                 if(e.candidate){
-                    wsend(globalMsg.from,'client-candidate',e.candidate)
-                    console.log('sent ice candidate')
-                }
-            }            
-        }catch(error){
-            alert("unable to send ice candidate");
-        };
+                wsend(globalMsg.from,'client-candidate',e.candidate)
+                console.log('sent ice candidate')
+            }
+            }catch(error){
+                alert("unable to send ice candidate");
+                }            
+            };
         peerConnection.ontrack = e => remoteVideo.srcObject = e.streams[0];
         localStream.getTracks().forEach(track => {
             peerConnection.addTrack(track,localStream);
