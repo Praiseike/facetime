@@ -36,20 +36,19 @@
             <a href="{{ route('auth-logout') }}" class="px-3 py-1 text-white cursor-pointer rounded bg-slate-500">Logout</a>
         </div>
         <div class="mt-5 flex flex-row flex-wrap gap" id="user-list" >
-            <div class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
-                <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
+            <div class="rounded-lg p-4 w-full mb-3  flex space-x-4 cursor-pointer bg-[#64748b99] items-center border border-slate-600">
+                <div class="bg-teal-400 rounded-full w-12 h-12 flex items-center justify-center text-white font-bold text-2xl">
                     {{ $user->name[0] }}
                 </div>
-                <span class="font-bold text-xl">You</span>
+                <span class="font-bold text-xl">{{ $user->name }} (You)</span>
             </div>
             @foreach($users as $target)
-            <div data-id="{{ $target->id }}" class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
-                <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
+            <div data-id="{{ $target->id }}" id="call" class="rounded-lg p-4 w-full mb-3 flex space-x-4 cursor-pointer bg-[#64748b99] items-center border border-slate-600">
+                <div class="bg-teal-400 rounded-full w-12 h-12 flex items-center justify-center text-white font-bold text-2xl">
                     {{ $target->name[0] }}
                 </div>
                 <div class="font-bold text-xl flex flex-row items-center">
-                    <div class="h-2 w-2 bg-green-500 rounded-full mx-2">
-                    </div>
+                    <div class="h-2 w-2 bg-gray-500 rounded-full mx-2 status"></div>
                     <span> 
                         {{ $target->name }}
                     </span>

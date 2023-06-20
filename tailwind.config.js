@@ -5,6 +5,7 @@ module.exports = {
     "./resources/**/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.vue",
+    "./public/assets/js/*.js"
   ],
   theme: {
     extend: {},

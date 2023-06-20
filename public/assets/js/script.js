@@ -285,7 +285,9 @@ const updateUsers = (msg) => {
     msg.data.users.forEach(user => {
         let currentUser = document.querySelector(`[data-id='${user.id}']`);
         if(currentUser){
-            
+            currentUser.querySelector('.status').classList.add('bg-green-500');
+            console.log(currentUser);
+            currentUser.querySelector('.status').classList.remove('bg-gray-500');
         }
     });        
     // update onclick handlers for all #call buttons
