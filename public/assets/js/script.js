@@ -20,7 +20,7 @@ class Logger{
     }
     log(...args){
         if(this.showLogs)  
-            logger.log(...args);
+            console.log(...args);
     }
 }
 
