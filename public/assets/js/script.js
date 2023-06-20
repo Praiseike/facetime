@@ -13,13 +13,17 @@ const servers = {
     iceServers: [
         
         {
-            urls: 'stun:stun.l.google.com:19302'
+            urls: ['stun:stun.l.google.com:19302','stun:sandbox1.techr.me:3478']
+        },
+        {
+            urls: ['stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']
         },
         {
             urls: 'turn:sandbox1.techr.me:3478',
             username: 'techroom',
             credential: 'techroompassword'
-        }
+        },
+
     ],
 }
 
