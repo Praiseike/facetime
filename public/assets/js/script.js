@@ -24,8 +24,7 @@ class Logger{
     }
 }
 
-const logger = new Logger()
-
+const logger = new Logger(false)
 const servers = {
     iceServers: [
         
