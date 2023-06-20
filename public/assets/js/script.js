@@ -10,14 +10,21 @@ let globalMsg = {};
 let currentTarget = 0;
 
 // object to control logging
-const debug = {
-    status: true,
-    log: string => {
-        if(this.status)
-            console.log()
+
+class Logger{
+    constructor(value = true){
+        this.show(value)
+    }
+    show(value = true){
+        this.showLogs = value
+    }
+    log(...args){
+        if(this.showLogs)  
+            logger.log(...args);
     }
 }
 
+const logger = new Logger()
 
 const servers = {
     iceServers: [
@@ -48,12 +55,12 @@ const createPeerConnection = () => {
         peerConnection.onicecandidate = e => {
             if(e.candidate){
                 wsend(globalMsg.from,'client-candidate',e.candidate)
-                console.log('sent ice candidate')
+                logger.log('sent ice candidate')
             }
         }
 
         peerConnection.oniceconnectionstatechange = e => {
-            console.log("connection state changed")
+            logger.log("connection state changed")
         }
 
         peerConnection.ontrack = e => remoteVideo.srcObject = e.streams[0];
@@ -74,7 +81,7 @@ const sendOffer = async (target) => {
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);
         wsend(target,'client-offer',offer);
-        console.log('sent offer');
+        logger.log('sent offer');
 
     }catch(error){
         alert("an error occured while trying to create and send offers")
@@ -121,7 +128,7 @@ const sendAnswer = async (target,description) => {
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
         wsend(target,'client-answer',answer);
-        console.log('sent answer');
+        logger.log('sent answer');
     }catch(error){
         alert(error)
     }
@@ -133,7 +140,7 @@ const makeRequest = async () => {
 }
 
 const handleAnswer = async (answer) => {
-    console.log("received answer");
+    logger.log("received answer");
     if(peerConnection.localDescription)
         await peerConnection.setRemoteDescription(answer);  
     else
@@ -155,7 +162,7 @@ connection.onmessage = async (event) => {
     switch(msg.type){
 
         case 'client-offer':
-            console.log("received offer")
+            logger.log("received offer")
             sendAnswer(msg.from,msg.data) 
             break;
 
@@ -164,7 +171,7 @@ connection.onmessage = async (event) => {
             break;
 
         case 'client-candidate':
-            console.log("received candidate");
+            logger.log("received candidate");
             handleCandidate(msg.data);
             break
 
@@ -187,18 +194,18 @@ connection.onmessage = async (event) => {
             break;
 
         case 'client-ready':
-            console.log(msg.type);
+            logger.log(msg.type);
             await makeRequest();
             break;
         
         case 'broadcast':
-            console.log("received broadcast... getting users");
+            logger.log("received broadcast... getting users");
             wsend(null,'get-users',{});
             // updateUsers(msg);
             break;
 
         case 'users-data':
-            console.log("listing users after broadcast",msg.data.users);
+            logger.log("listing users after broadcast",msg.data.users);
             updateUsers(msg);
             break;
         default:
@@ -215,7 +222,7 @@ const initCam = async () => {
                 resolve()
             })
             .catch(error => {
-                console.log(error)
+                logger.log(error)
                 reject()
             })
     });
@@ -235,12 +242,12 @@ const call = async (e) => {
     // initiate a call by first getting the target id 
     // and initialing user devices
     const target = e.target.getAttribute('data-id');
-    console.log(e.target);
+    logger.log(e.target);
     currentTarget = target;
     toggleCallScreen();
     initCam().then(() => {
         // ask if the target client is ready to receive a call
-        console.log("sending message to target",target)
+        logger.log("sending message to target",target)
         wsend(target,'is-client-ready',{})
     })
 
@@ -250,7 +257,7 @@ const answerCall = async (e) => {
     toggleRequestScreen();
     toggleCallScreen();
     await initCam();
-    console.log('client is ready');
+    logger.log('client is ready');
     wsend(globalMsg.from,'client-ready',null);
 }
 
@@ -260,7 +267,7 @@ const denyCall = (target) => {
 }
 
 const endcall = () => {
-    console.log("ending call");
+    logger.log("ending call");
     if(localStream){
         wsend(globalMsg.from,'end-call',null);
         localStream.getTracks().forEach(track => track.stop());
@@ -280,7 +287,7 @@ const updateUsers = (msg) => {
         let currentUser = document.querySelector(`[data-id='${user.id}']`);
         if(currentUser){
             currentUser.querySelector('.status').classList.add('bg-green-500');
-            console.log(currentUser);
+            logger.log(currentUser);
             currentUser.querySelector('.status').classList.remove('bg-gray-500');
         }
     });        
