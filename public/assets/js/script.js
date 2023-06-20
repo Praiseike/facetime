@@ -284,8 +284,7 @@ const updateUsers = (msg) => {
 
     msg.data.users.forEach(user => {
         let currentUser = document.querySelector(`[data-id='${user.id}']`);
-        currentUser.classList.toggle('onli')
-
+        console.log(currentUser)
     });        
     // update onclick handlers for all #call buttons
     document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
