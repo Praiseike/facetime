@@ -25,6 +25,7 @@ const servers = {
         // },
 
     ],
+    iceCandidatePoolSize: 10,
 }
 
 
@@ -34,20 +35,27 @@ const constraints = {
     audio: true,
 }
 
+const offerOptions = {
+  offerToReceiveAudio: 1,
+  offerToReceiveVideo: 1
+};
+
 const createPeerConnection = () => {
     try{
         peerConnection = new RTCPeerConnection(servers);
         peerConnection.onicecandidate = e => {
-            try{
-                if(e.candidate){
+            if(e.candidate){
                 wsend(globalMsg.from,'client-candidate',e.candidate)
                 console.log('sent ice candidate')
             }
-            }catch(error){
-                alert("unable to send ice candidate");
-                }            
-            };
+        }
+
+        peerConnection.oniceconnectionstatechange = e => {
+            console.log("connection state changed")
+        }
+
         peerConnection.ontrack = e => remoteVideo.srcObject = e.streams[0];
+
         localStream.getTracks().forEach(track => {
             peerConnection.addTrack(track,localStream);
         });
@@ -111,7 +119,8 @@ const sendAnswer = async (target,description) => {
     try{
 
         await createPeerConnection();
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(description))
+        await peerConnection.setRemoteDescription(description)
+        // await peerConnection.setRemoteDescription(new RTCSessionDescription(description))
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
         wsend(target,'client-answer',answer);
@@ -140,8 +149,6 @@ const handleCandidate = (candidate) => {
         peerConnection.addIceCandidate(candidate);
     }
 }
-
-
 
 
 connection.onmessage = async (event) => {
@@ -263,7 +270,7 @@ const denyCall = (target) => {
 
 const endcall = () => {
     console.log("ending call");
-    if(localStream || peerConnection){
+    if(peerConnection || localStream){
         wsend(globalMsg.from,'end-call',null);
         localStream.getTracks().forEach(track => track.stop());
         localStream = null;
