@@ -283,7 +283,8 @@ const updateUsers = (msg) => {
     const userList = document.querySelectorAll('#call');
 
     msg.data.users.forEach(user => {
-        let user = document.querySelector(`[data-id='${user.id}']`)
+        let currentUser = document.querySelector(`[data-id='${user.id}']`);
+        currentUser.classList.toggle('onli')
 
     });        
     // update onclick handlers for all #call buttons
