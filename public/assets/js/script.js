@@ -137,7 +137,7 @@ const handleAnswer = async (answer) => {
 
 const handleCandidate = (candidate) => {
     if(peerConnection.localDescription){
-        peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        peerConnection.addIceCandidate(candidate);
     }
 }
 
