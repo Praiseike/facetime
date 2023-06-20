@@ -47,7 +47,7 @@
                 <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
                     {{ $target->name[0] }}
                 </div>
-                <div class="font-bold text-xl">
+                <div class="font-bold text-xl flex flex-row items-center">
                     <div class="h-2 w-2 bg-green-500 rounded-full mx-2">
                     </div>
                     <span> 
