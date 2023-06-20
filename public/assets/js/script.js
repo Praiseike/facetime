@@ -116,8 +116,8 @@ const sendAnswer = async (target,description) => {
     try{
 
         await createPeerConnection();
-        await peerConnection.setRemoteDescription(description)
-        // await peerConnection.setRemoteDescription(new RTCSessionDescription(description))
+        // await peerConnection.setRemoteDescription(description)
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(description))
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
         wsend(target,'client-answer',answer);
