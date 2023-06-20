@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div id="call-screen" class="fixed h-screen z-[1000] w-full backdrop-blur inset-0" id="overlay">
+    <div id="call-screen" class="fixed h-screen hidden z-[1000] w-full backdrop-blur inset-0" id="overlay">
         <div class="h-full w-full sm:md:w-min-[40%] mx-auto px-0 sm:md:px-10">
             <div>            
                 <video class="bg-neutral-900 border w-[12rem] absolute h-[14rem] border-orange-500" autoplay muted id="localVideo"></video>
