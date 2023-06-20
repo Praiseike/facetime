@@ -48,7 +48,7 @@
                     {{ $target->name[0] }}
                 </div>
                 <span class="font-bold text-xl">
-                <span class="h-3 w-3 bg-green-500 rounded-full mx-2">
+                <span class="h-3 w-3 bg-green-500 rounded-full mx-2"></span>
                     {{ $target->name }}
                 </span>
             </div>
