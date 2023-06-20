@@ -40,14 +40,14 @@
                 <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
                     {{ $user->name[0] }}
                 </div>
-                <span class="font-bold text-xl">You</span>
+                <span class="font-bold text-xl"><span class="h-3 w-3 bg-green-500 rounded-full"></span>You</span>
             </div>
             @foreach($users as $target)
             <div class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
                 <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
                     {{ $target->name[0] }}
                 </div>
-                <span class="font-bold text-xl">$target->name</span>
+                <span class="font-bold text-xl">{{ $target->name }}</span>
             </div>
             @endforeach
         </div>

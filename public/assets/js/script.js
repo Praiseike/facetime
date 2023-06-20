@@ -280,20 +280,11 @@ const endcall = () => {
 }
 
 const updateUsers = (msg) => {
-    const userList = document.querySelector('#user-list');
-    userList.innerHTML = '';
-    const addUser = user => {
-        userList.innerHTML += `
-            <li id="call" data-id="${user.id}" " class="rounded-lg p-4 m-4 w-[10rem] h-[10rem] flex justify-center space-y-4 cursor-pointer bg-[#64748b99] flex-col items-center border border-slate-600">
-                <div class="bg-teal-400 rounded-full w-14 h-14 flex items-center justify-center text-white font-bold text-2xl">
-                    ${ user.name[0] }
-                </div>
-                <span class="font-bold text-xl">${(user.id == currentUserID) ? 'You':user.name}</span>
-            </li>
-            `
-    }
+    const userList = document.querySelectorAll('#call');
+
     msg.data.users.forEach(user => {
-        addUser(user);
+        let user = document.querySelector(`[data-id='${user.id}']`)
+
     });        
     // update onclick handlers for all #call buttons
     document.querySelectorAll('#call').forEach((btn) => btn.addEventListener('click',call));
