@@ -51,7 +51,7 @@
                 username: 'techroom',
                 credential: 'techroompassword'
             }],
-            // iceCandidatePoolSize: 10,
+            iceCandidatePoolSize: 10,
         }
 
         const constraints = {
