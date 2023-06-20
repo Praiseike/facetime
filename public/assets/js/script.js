@@ -32,10 +32,10 @@ const constraints = {
     audio: true,
 }
 
-const offerOptions = {
-  offerToReceiveAudio: 1,
-  offerToReceiveVideo: 1
-};
+// const offerOptions = {
+//   offerToReceiveAudio: 1,
+//   offerToReceiveVideo: 1
+// };
 
 const createPeerConnection = () => {
     try{
@@ -77,14 +77,9 @@ const sendOffer = async (target) => {
 }
 
 const wsend = (target,type,data = null) => {
-    const messageObject = {
-        target: target,
-        type: type,
-        data: data
-    }
-
-    const message = JSON.stringify(messageObject);
-    
+    const message = JSON.stringify({
+        target: target,type: type,data: data
+    });
     let tries = 5;
     try{
         let retryInterval = setInterval(() => {

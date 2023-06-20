@@ -8,25 +8,32 @@
         let connection = new WebSocket(`wss://${location.hostname}/signaling?id={{ $user->id }}`);
         let currentUserID = {{ $user->id }}
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     @vite('resources/css/app.css')
-    <title>Video chat</title>
+    <title>Facetime | Video chat</title>
 </head>
 <body class="bg-slate-900">
     <div id="call-request" class="fixed hidden h-screen w-full backdrop-blur inset-0" id="overlay">
         <div class="h-[14rem] flex justify-center text-center items-center space-y-10 flex-col rounded-md border border-slate-700 p-4 mt-20 w-[90%] sm:md:w-[40%] z-[50] bg-[#64748b11] mx-auto px-10">
             <h1 class="text-md text-slate-300"><span class="font-bold text-lg">Incomming call from</span> <br> example@techr.com</h1>
             <div class="z-[40] w-full mx-auto flex justify-around">
-                <button type="" id="answer" class="w-14 rounded-full h-14 hover:bg-green-500 mt-auto bg-green-700 text-white">ans</button>
-                <button type="" id="deny" class="w-14 rounded-full h-14 hover:bg-red-500 mt-auto bg-red-700 text-white">end</button>
+                <button type="" id="answer" class="w-14 rounded-full text-2xl h-14 hover:bg-green-500 mt-auto bg-green-700 text-white">
+                    <i class="fa-solid fa-phone fa-rotate-270"></i>
+                </button>
+                <button type="" id="deny" class="w-14 rounded-full text-2xl h-14 hover:bg-red-500 mt-auto bg-red-700 text-white">
+                    <i class="fa-solid fa-phone fa-rotate-90"></i>
+                </button>
             </div>
         </div>
     </div>
-    <div id="call-screen" class="fixed hidden h-screen w-full backdrop-blur inset-0" id="overlay">
+    <div id="call-screen" class="fixed h-screen z-[1000] w-full backdrop-blur inset-0" id="overlay">
         <div class="h-full w-full sm:md:w-min-[40%] mx-auto px-0 sm:md:px-10">
-            <video class="bg-black border w-[10rem] z-[20] absolute h-[10rem] border-orange-500" autoplay muted id="localVideo"></video>
-            <video class="bg-black h-screen  w-full" autoplay id="remoteVideo"></video>
-            <div class="z-[40] mt-[-5rem] w-fit mx-auto">
-                <button type="" id="endcall" class="w-14 rounded-full h-14 hover:bg-red-500 mt-auto bg-red-700 text-white">end</button>
+            <div>            
+                <video class="bg-neutral-900 border w-[12rem] absolute h-[14rem] border-orange-500" autoplay muted id="localVideo"></video>
+                <video class="bg-neutral-900 h-screen w-full" autoplay id="remoteVideo"></video>
+            </div>
+            <div class="absolute bottom-[30px] left-[50%] ml-[-2rem] w-fit mx-auto">
+                <button type="" id="endcall" class="w-[4rem] rounded-full h-[4rem] hover:bg-red-500 mt-auto bg-red-700 text-white">end</button>
             </div>
         </div>
     </div>
