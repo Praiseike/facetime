@@ -22,7 +22,7 @@ const servers = {
         },
 
     ],
-    iceCandidatePoolSize: 10,
+    // iceCandidatePoolSize: 10,
 }
 
 
